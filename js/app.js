@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //listener a input criptomoneda
     criptoMonedasSelect.addEventListener('change', leerValor);
+    //listener a input moneda
+    monedaSelect.addEventListener('change', leerValor);
 });
 //funcion para consultar las criptomonedas
 function consultarCriptomonedas() {
@@ -78,9 +80,49 @@ function submitFormulario( e ) {
         mostrarAlerta('Ambos campos son obligatorios');
         return;
     }
+    //consultar la API con los resultados
+    consultarApi();
 
 }
 //funcion para mostrar alerta
 function mostrarAlerta( mensaje ) {
-    console.log( mensaje );
+    //verificar que no hayan alertas previas
+    const alertas = document.querySelector('.error');
+
+    if ( !alertas ) {
+        //crear el html
+        const divMensaje = document.createElement('div');
+        //estilos
+        divMensaje.classList.add('error');
+        //mensaje de erro
+        divMensaje.textContent = mensaje;
+
+        //renderizar
+        formulario.appendChild( divMensaje );
+        //quitar la alerta 5s despues
+        setTimeout(() => {
+            //quitar alerta
+            divMensaje.remove();
+        }, 5000);
+    }
+}
+//funcion para consultar API
+function consultarApi() {
+    //destructuring
+    const { moneda, criptomoneda } = objBusqueda;
+
+    //url
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ criptomoneda}&tsyms=${ moneda }`;
+    //fetch
+    fetch( url )
+        .then( respuesta => respuesta.json() )
+        //en este caso necesitamos entrar con corchetes a las propiedades de la API
+            .then( cotizacion => {
+                //llamar funcion para mostrar cotizacion en el html
+                mostrarCotizacionHTML( cotizacion.DISPLAY[criptomoneda][moneda] );
+            });
+}
+//funcion para mostrar la cotizacion HTML
+function mostrarCotizacionHTML( cotizacion ) {
+    console.log( cotizacion );
 }
