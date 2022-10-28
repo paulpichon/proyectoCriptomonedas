@@ -5,6 +5,8 @@ const criptoMonedasSelect = document.querySelector('#criptomonedas');
 const monedaSelect = document.querySelector('#moneda');
 //variable para el formulario
 const formulario = document.querySelector('#formulario');
+//resultados
+const resultado = document.querySelector('#resultado');
 
 //creamos un objeto vacio
 const objBusqueda = {
@@ -124,5 +126,48 @@ function consultarApi() {
 }
 //funcion para mostrar la cotizacion HTML
 function mostrarCotizacionHTML( cotizacion ) {
-    console.log( cotizacion );
+    //funcion para limpiar el html anterior
+    limpiarHTML();
+    //destructuring
+    const { PRICE, HIGHDAY, LOWDAY, CHANGEPCT24HOUR, LASTUPDATE } = cotizacion;
+    //construir el HTML
+    const precio = document.createElement('p');
+    //estilos
+    precio.classList.add('precio');
+    //innerhtml
+    precio.innerHTML = `El precio es: <span>${ PRICE }</span>`;
+
+    //precioMaximo
+    const precioMaximo = document.createElement('p');
+    precioMaximo.innerHTML = `<p>Precio más alto del dia <span>${ HIGHDAY }</span> </p>`;
+    
+    //precio minimo
+    const precioMinimo = document.createElement('p');
+    precioMinimo.innerHTML = `<p>Precio más bajo del dia <span>${ LOWDAY }</span> </p>`;
+    
+    //variacion del dia
+    const ultimasHoras = document.createElement('p');
+    ultimasHoras.innerHTML = `<p>Variacion ultimas 24 horas: <span>${ CHANGEPCT24HOUR } %</span> </p>`;
+    
+    //ultima actualizacion
+    const ultimaActualizacion = document.createElement('p');
+    ultimaActualizacion.innerHTML = `<p>Ultima actualizacion: <span>${ LASTUPDATE } </span> </p>`;
+
+    //renderizar
+    //precio actual
+    resultado.appendChild( precio );
+    //precio maximo del dia
+    resultado.appendChild( precioMaximo );
+    //precio minimo del dia
+    resultado.appendChild( precioMinimo );
+    //variacion ultimas horas
+    resultado.appendChild( ultimasHoras );
+    //ultima actualizacion
+    resultado.appendChild( ultimaActualizacion );
+}
+//funcion limpiar html
+function limpiarHTML() {
+    while ( resultado.firstChild ) {
+        resultado.removeChild( resultado.firstChild );
+    }
 }
